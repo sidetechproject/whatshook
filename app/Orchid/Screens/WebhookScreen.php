@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Button;
 use App\Traits\WebhookTrait;
+use Auth;
 
 class WebhookScreen extends Screen
 {
@@ -24,7 +25,7 @@ class WebhookScreen extends Screen
     public function query(): iterable
     {
         return [
-            'webhooks' => Webhook::latest()->get(),
+            'webhooks' => Webhook::where(['id' => Auth::id()])->latest()->get(),
         ];
     }
 

@@ -30,6 +30,8 @@ class WebhookController extends Controller
         try {
             $authRequest = $httpClient->request('POST', $httpBaseUrl, [
                     'form_params' => [
+                        'url' => $webhook->alias,
+                        'name' => $webhook->name,
                         'number' => $webhook->route_value,
                         'message' => $payload,
                     ],

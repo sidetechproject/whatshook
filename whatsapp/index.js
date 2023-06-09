@@ -1,6 +1,13 @@
 const qrcode = require('qrcode-terminal');
-const { Client } = require('whatsapp-web.js');
-const client = new Client();
+
+// const { Client } = require('whatsapp-web.js');
+//const client = new Client();
+
+const { Client, LocalAuth } = require('whatsapp-web.js');
+
+const client = new Client({
+    authStrategy: new LocalAuth()
+});
 
 const bodyParser = require('body-parser');
 const express = require("express");
@@ -33,6 +40,7 @@ client.initialize();
 app.post("/webhook", (req, res, next) => {
 	console.log('Got body:', req.body);
 
+	let name = req.body.name;
 	let number = req.body.number;
 	//let message = JSON.stringify(req.body.message);
 	let message = req.body.message;
