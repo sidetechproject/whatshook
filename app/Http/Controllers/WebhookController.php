@@ -18,6 +18,9 @@ class WebhookController extends Controller
         $httpClient = new HttpClient();
 
         $payload = json_decode($request->getContent());
+        if(!$payload){
+            $payload = 'Empty Payload';
+        }
 
         $webhook = Webhook::where('alias', '=', trim($alias))->first();
         
