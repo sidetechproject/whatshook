@@ -34,7 +34,8 @@ app.post("/webhook", (req, res, next) => {
 	console.log('Got body:', req.body);
 
 	let number = req.body.number;
-	let message = JSON.stringify(req.body.message);
+	//let message = JSON.stringify(req.body.message);
+	let message = req.body.message;
 
 	number = number.includes('@c.us') ? number : `${number}@c.us`;
 	client.sendMessage(number, message);
