@@ -73,10 +73,10 @@ class WebhookScreen extends Screen
                 
                 TD::make('route_value', __('Value')),
 
-                TD::make('Actions')
+                TD::make('')
                 ->alignRight()
                 ->render(function (Webhook $webhook) {
-                    return Button::make('Delete Webhook')
+                    return Button::make('Delete')
                         ->confirm('After deleting, the webhook will be gone forever.')
                         ->method('delete', ['webhook' => $webhook->id]);
                 }),
