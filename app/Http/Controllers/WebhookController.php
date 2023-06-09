@@ -17,7 +17,8 @@ class WebhookController extends Controller
     {
         $httpClient = new HttpClient();
 
-        $payload = json_decode($request->getContent());
+        //$payload = json_decode($request->getContent());
+        $payload = $request->getContent();
         if(!$payload){
             $payload = 'Empty Payload';
         }
