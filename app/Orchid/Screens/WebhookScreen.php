@@ -7,15 +7,21 @@ use Orchid\Screen\Screen;
 use Orchid\Screen\Fields\Input;
 use Orchid\Support\Facades\Layout;
 use App\Models\Webhook;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Button;
 use App\Traits\WebhookTrait;
+use Orchid\Screen\Actions\Link;
+use Orchid\Support\Facades\Alert;
+use Orchid\Support\Facades\Toast;
 use Auth;
 
 class WebhookScreen extends Screen
 {
     use WebhookTrait;
+
+    private $webhooks;
 
     /**
      * Fetch data to be displayed on the screen.
@@ -24,8 +30,12 @@ class WebhookScreen extends Screen
      */
     public function query(): iterable
     {
+        $webhooks = Webhook::where(['user_id' => Auth::id()])->latest()->get();
+
+        $this->webhooks = $webhooks;
+
         return [
-            'webhooks' => Webhook::where(['user_id' => Auth::id()])->latest()->get(),
+            'webhooks' => $webhooks,
         ];
     }
 
@@ -46,11 +56,20 @@ class WebhookScreen extends Screen
      */
     public function commandBar(): iterable
     {
+        $canAddWebHooks = Auth::user()->subscribed() || $this->webhooks->count() < 1;
+
         return [
             ModalToggle::make('Add WebHook')
                 ->modal('webhookModal')
                 ->method('create')
-                ->icon('plus'),
+                ->icon('plus')
+                ->canSee($canAddWebHooks),
+
+            Link::make('Billing')
+                ->href('/billing')
+                ->icon('credit-card')
+                ->help('Subscribe to create unlimited WhatsHooks.')
+                ->canSee(!$canAddWebHooks),
         ];
     }
 
@@ -72,6 +91,10 @@ class WebhookScreen extends Screen
                 TD::make('route_type', __('Type')),
 
                 TD::make('route_value', __('Value')),
+
+                TD::make('', __('WhatsApp Messages'))->render(function ($webhook) {
+                    return !Auth::user()->subscribed() ? '100 / month' : 'Unlimited';
+                }),
 
                 TD::make('')
                 ->alignRight()
@@ -99,7 +122,7 @@ class WebhookScreen extends Screen
                     ])
                     ->type('number')
                     ->placeholder('Ex: 55 51 9 9999-9999')
-                    ->help('Just numbers. DDD + DDI + PHONE NUMBER'),
+                    ->help('Only numbers. DDD + DDI + PHONE NUMBER'),
             ]))
             ->title('Create your WhatsHook')
             ->applyButton('Add WebHook'),

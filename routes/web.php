@@ -27,6 +27,10 @@ Route::get('/', function () {
 //   });
 // });
 
+Route::get('/spark-billing', function () {
+    return redirect('billing');
+})->name('platform.billing');
+
 Route::get('/{alias}', function () {
     return view('webhook-application');
 });

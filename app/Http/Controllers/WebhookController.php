@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Webhook;
+use App\Models\User;
 use GuzzleHttp\Client as HttpClient;
+use App\Notifications\WebhookReceived;
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\BadResponseException;
 
 class WebhookController extends Controller
 {
@@ -28,13 +32,15 @@ class WebhookController extends Controller
         $httpBaseUrl = env('APP_URL_WHATSAPP');
 
         try {
+            $data = [
+                'url' => $webhook->alias,
+                'name' => $webhook->name,
+                'number' => $webhook->route_value,
+                'payload' => $payload,
+            ];
+
             $authRequest = $httpClient->request('POST', $httpBaseUrl, [
-                    'form_params' => [
-                        'url' => $webhook->alias,
-                        'name' => $webhook->name,
-                        'number' => $webhook->route_value,
-                        'payload' => $payload,
-                    ],
+                    'form_params' => $data,
                     'verify' => false,
                     'curl' => [
                         CURLOPT_SSL_VERIFYPEER => false
@@ -42,7 +48,10 @@ class WebhookController extends Controller
                 ]
             );
 
-            //$content = json_decode($authRequest->getBody()->getContents());
+            $user = User::find($webhook->user_id)->first();
+            $user->notify(new WebhookReceived($data));
+
+            $content = json_decode($authRequest->getBody()->getContents());
         } catch (BadResponseException $e) {
             Log::info($e->getResponse()->getBody()->getContents());
 

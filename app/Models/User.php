@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use Orchid\Filters\Types\Like;
+use Illuminate\Notifications\Notifiable;
 use Orchid\Filters\Types\Where;
 use Orchid\Filters\Types\WhereDateStartEnd;
 use Orchid\Platform\Models\User as Authenticatable;
+use Spark\Billable;
 
 class User extends Authenticatable
 {
+    use Billable, Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -40,6 +44,7 @@ class User extends Authenticatable
     protected $casts = [
         'permissions'          => 'array',
         'email_verified_at'    => 'datetime',
+        'trial_ends_at' => 'datetime',
     ];
 
     /**
@@ -67,4 +72,5 @@ class User extends Authenticatable
         'updated_at',
         'created_at',
     ];
+
 }

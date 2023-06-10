@@ -34,9 +34,14 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         return [
-            Menu::make('WebHooks')
+            Menu::make('WhatsHooks')
                 ->icon('bs.compass')
-                ->route(config('platform.index')),
+                ->route(config('platform.index'))
+                ->divider(),
+
+            Menu::make('Billing')
+                ->icon('bs.credit-card')
+                ->route('platform.billing'),
 
             // Menu::make('Example Screen')
             //     ->icon('bs.collection')
