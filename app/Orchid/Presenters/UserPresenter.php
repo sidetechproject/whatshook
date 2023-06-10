@@ -55,7 +55,7 @@ class UserPresenter extends Presenter implements Searchable, Personable
     {
         $hash = md5(strtolower(trim($this->entity->email)));
 
-        $default = urlencode('https://whatshook.io/vendor/orchid/favicon.svg');
+        $default = urlencode('https://whatshook.io/vendor/orchid/favicon.png');
 
         return "https://www.gravatar.com/avatar/$hash?d=$default";
     }
