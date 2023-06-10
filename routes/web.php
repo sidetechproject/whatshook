@@ -27,5 +27,9 @@ Route::get('/', function () {
 //   });
 // });
 
+Route::get('/{alias}', function () {
+    return view('webhook-application');
+});
+
 Route::post('/{alias}', [WebhookController::class, 'send'])->name('webhook.send');
 
