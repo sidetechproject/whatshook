@@ -24,7 +24,7 @@ class WebhookController extends Controller
         }
 
         $webhook = Webhook::where('alias', '=', trim($alias))->first();
-        
+
         $httpBaseUrl = env('APP_URL_WHATSAPP');
 
         try {
@@ -33,7 +33,7 @@ class WebhookController extends Controller
                         'url' => $webhook->alias,
                         'name' => $webhook->name,
                         'number' => $webhook->route_value,
-                        'message' => $payload,
+                        'payload' => $payload,
                     ],
                     'verify' => false,
                     'curl' => [

@@ -1,2 +1,3 @@
-2023/06/09-17:07:41.303 fd03 Creating DB /Users/maicon/Sites/whatshook/whatsapp/.wwebjs_auth/session/Default/File System/Origins since it was missing.
-2023/06/09-17:07:41.323 fd03 Reusing MANIFEST /Users/maicon/Sites/whatshook/whatsapp/.wwebjs_auth/session/Default/File System/Origins/MANIFEST-000001
+2023/06/09-21:23:05.227 15d07 Reusing MANIFEST /Users/maicon/Sites/whatshook/whatsapp/.wwebjs_auth/session/Default/File System/Origins/MANIFEST-000001
+2023/06/09-21:23:05.227 15d07 Recovering log #3
+2023/06/09-21:23:05.227 15d07 Reusing old log /Users/maicon/Sites/whatshook/whatsapp/.wwebjs_auth/session/Default/File System/Origins/000003.log 

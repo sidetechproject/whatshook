@@ -40,10 +40,17 @@ client.initialize();
 app.post("/webhook", (req, res, next) => {
 	console.log('Got body:', req.body);
 
+	let url = req.body.url;
 	let name = req.body.name;
 	let number = req.body.number;
 	//let message = JSON.stringify(req.body.message);
-	let message = req.body.message;
+	let message = '*🔔 WhatsHook*' + `
+
+` + name + " (https://whatshook.io/" + url + ") " + `
+
+` + req.body.payload + `
+
+` + "_⚠️ automated message, don't reply_";
 
 	number = number.includes('@c.us') ? number : `${number}@c.us`;
 	client.sendMessage(number, message);

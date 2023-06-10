@@ -25,7 +25,7 @@ class WebhookScreen extends Screen
     public function query(): iterable
     {
         return [
-            'webhooks' => Webhook::where(['id' => Auth::id()])->latest()->get(),
+            'webhooks' => Webhook::where(['user_id' => Auth::id()])->latest()->get(),
         ];
     }
 
@@ -70,7 +70,7 @@ class WebhookScreen extends Screen
                 }),
 
                 TD::make('route_type', __('Type')),
-                
+
                 TD::make('route_value', __('Value')),
 
                 TD::make('')
@@ -90,11 +90,16 @@ class WebhookScreen extends Screen
 
                 Input::make('webhook.route_type')
                     ->type('hidden')
-                    ->value('whatsapp'),
+                    ->value('WhatsApp'),
 
                 Input::make('webhook.route_value')
                     ->title('WhatsApp Number')
-                    ->placeholder('Enter your WhatsApp number'),
+                    ->mask([
+                        'numericInput' => true
+                    ])
+                    ->type('number')
+                    ->placeholder('Ex: 55 51 9 9999-9999')
+                    ->help('Just numbers. DDD + DDI + PHONE NUMBER'),
             ]))
             ->title('Create your WhatsHook')
             ->applyButton('Add WebHook'),

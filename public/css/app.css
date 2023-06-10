@@ -1,0 +1,26 @@
+td[data-column="alias"] div {
+    font-weight: bold;
+    border-bottom: 2px solid #86EFAC;
+    padding: 0 5px 0 5px;
+    width: fit-content;
+}
+.text-success {
+    color: #86EFAC !important
+}
+.btn.btn-link, .btn.btn-default {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    --tw-bg-opacity: 1;
+    background-color: #86EFAC !important;
+    padding: 0.5rem 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    --tw-text-opacity: 1;
+    color: #040404;
+    border: 2px solid #040404 !important;
+}
+footer .btn {
+    display: none !important
+}
