@@ -121,8 +121,8 @@ class WebhookScreen extends Screen
                         'numericInput' => true
                     ])
                     ->type('number')
-                    ->placeholder('Ex: 55 51 9 9999-9999')
-                    ->help('Only numbers. DDD + DDI + PHONE NUMBER'),
+                    ->placeholder('Ex: 55 11 9999 9999')
+                    ->help('Only numbers. DDI + DDD + PHONE NUMBER'),
             ]))
             ->title('Create your WhatsHook')
             ->applyButton('Add WebHook'),
