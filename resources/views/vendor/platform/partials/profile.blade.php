@@ -10,6 +10,6 @@
         </small>
     </a>
 
-    <x-orchid-notification/>
+    {{-- <x-orchid-notification/> --}}
 
 </div>
