@@ -37,3 +37,5 @@ Route::get('/{alias}', function () {
 
 Route::post('/{alias}', [WebhookController::class, 'send'])->name('webhook.send');
 
+Route::get('/verify/{uuid}', [WebhookController::class, 'channelVerify'])->name('webhook.whatsapp.verification');
+

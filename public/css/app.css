@@ -7,6 +7,9 @@ td[data-column="alias"] div {
 .text-success {
     color: #86EFAC !important
 }
+.text-center {
+    text-align: center;
+}
 .btn.btn-link, .btn.btn-default {
     display: inline-flex;
     align-items: center;

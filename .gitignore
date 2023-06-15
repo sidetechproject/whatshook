@@ -146,4 +146,7 @@ Homestead.json
 .wwebjs_auth/*
 .wwebjs_auth
 
+.wwebjs_cache/*
+.wwebjs_cache
+
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node,Laravel

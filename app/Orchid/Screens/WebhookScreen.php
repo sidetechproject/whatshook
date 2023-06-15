@@ -84,6 +84,10 @@ class WebhookScreen extends Screen
         return [
             Layout::table('webhooks', [
                 TD::make('name', __('Name')),
+                
+                TD::make('status', __('Status'))->render(function ($webhook) {
+                    return !$webhook->status ? 'Pending Validation, click on the <br> link sent to WhatsApp (' . $webhook->route_value . ') .' : 'Active';
+                }),
 
                 TD::make('alias', __('URL'))->render(function ($webhook) {
                     return env('APP_URL') . '/' . $webhook->alias;
@@ -127,7 +131,7 @@ class WebhookScreen extends Screen
                     // ])
                     //->type('number')
                     //->placeholder('Ex: 55 11 9999 9999')
-                    //->help('Only numbers. DDI + DDD + PHONE NUMBER'),
+                    ->help('You will receive a link on WhatsApp informed for activation.'),
             ]))
             ->title('Create your WhatsHook')
             ->applyButton('Add WebHook'),
@@ -159,6 +163,8 @@ class WebhookScreen extends Screen
         $webhook->route_value = $route_value;
         $webhook->alias = $this->generateAlias();
         $webhook->save();
+
+        $this->sendWhatsAppLinkVerification($webhook);
     }
 
     /**

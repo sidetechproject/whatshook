@@ -51,4 +51,59 @@ trait WebhookTrait
         }
         return $randomString;
     }
+
+    /**
+     * Verify is json
+     *
+     * @param int $length
+     * @return string
+     */
+    private function isJson($string) {
+       json_decode($string);
+       return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    /**
+     * Sent verification link.
+     *
+     * @return string|null
+     */
+    private function sendWhatsAppLinkVerification($webhook)
+    {
+        $httpClient = new HttpClient();
+        $httpBaseUrl = env('APP_URL_WHATSAPP');
+
+        $data = [
+            'url' => $webhook->alias,
+            'name' => $webhook->name,
+            'number' => $webhook->route_value,
+            'payload' => route('webhook.whatsapp.verification', ['uuid' => $webhook->uuid]),
+        ];
+
+        $authRequest = $httpClient->request('POST', $httpBaseUrl, [
+                'form_params' => $data,
+                'verify' => false,
+                'curl' => [
+                    CURLOPT_SSL_VERIFYPEER => false
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Verify link sent
+     *
+     * @return string|null
+     */
+    private function verify($uuid)
+    {
+        if(!Webhook::where('uuid', '=', $uuid)->exists()) {
+            return false;
+        }
+
+        Webhook::where('uuid', '=', $uuid)->update(['status' => 1]);
+
+        return true;
+    }
+    
 }

@@ -9,9 +9,12 @@ use GuzzleHttp\Client as HttpClient;
 use App\Notifications\WebhookReceived;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Exception\BadResponseException;
+use App\Traits\WebhookTrait;
 
 class WebhookController extends Controller
 {
+    use WebhookTrait;
+
     public function index()
     {
         //return view('contact.index');
@@ -29,9 +32,20 @@ class WebhookController extends Controller
 
         $webhook = Webhook::where('alias', '=', trim($alias))->first();
 
+        if(!$webhook || !$webhook->status){
+            return response()->json([
+                'status' => 400,
+                'message' => 'Not Found or Not Verified'
+            ], 400);
+        }
+
         $httpBaseUrl = env('APP_URL_WHATSAPP');
 
         try {
+            // if($this->isJson($payload)){
+            //     $payload = json_encode($payload, true);
+            // }
+
             $data = [
                 'url' => $webhook->alias,
                 'name' => $webhook->name,
@@ -63,5 +77,12 @@ class WebhookController extends Controller
         return response()->json([
             'status' => 200
         ], 200);
+    }
+
+    public function channelVerify($uuid)
+    {   
+        $channelIsVerified = $this->verify($uuid);
+        
+        return view('webhook-verification', ['channelIsVerified' => $channelIsVerified]);
     }
 }
