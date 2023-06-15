@@ -127,9 +127,15 @@ return [
 
     'resource' => [
         'stylesheets' => [
+            'https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css',
             '/css/app.css',
         ],
-        'scripts'     => [],
+        'scripts' => [
+            'https://code.jquery.com/jquery-3.6.3.min.js',
+            'https://cdn.jsdelivr.net/npm/jquery-mask-plugin@1.14.16/dist/jquery.mask.min.js',
+            'https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js',
+            '/js/custom.js',
+        ],
     ],
 
     /*
@@ -262,7 +268,7 @@ return [
      */
 
     'turbo' => [
-        'cache'   => true,
+        'cache'   => false,
     ],
 
     /*

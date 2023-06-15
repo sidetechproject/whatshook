@@ -24,3 +24,6 @@ td[data-column="alias"] div {
 footer .btn {
     display: none !important
 }
+.route_value.form-control, .iti {
+    width: 100%;
+}

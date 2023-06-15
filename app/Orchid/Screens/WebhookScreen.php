@@ -63,6 +63,7 @@ class WebhookScreen extends Screen
                 ->modal('webhookModal')
                 ->method('create')
                 ->icon('plus')
+                ->class('btn btn-link add-webhook')
                 ->canSee($canAddWebHooks),
 
             Link::make('Billing')
@@ -88,7 +89,7 @@ class WebhookScreen extends Screen
                     return env('APP_URL') . '/' . $webhook->alias;
                 }),
 
-                TD::make('route_type', __('Type')),
+                TD::make('route_type', __('Channel')),
 
                 TD::make('route_value', __('Value')),
 
@@ -115,14 +116,18 @@ class WebhookScreen extends Screen
                     ->type('hidden')
                     ->value('WhatsApp'),
 
+                Input::make('webhook.phone_number')
+                    ->type('hidden'),
+
                 Input::make('webhook.route_value')
                     ->title('WhatsApp Number')
-                    ->mask([
-                        'numericInput' => true
-                    ])
-                    ->type('number')
-                    ->placeholder('Ex: 55 11 9999 9999')
-                    ->help('Only numbers. DDI + DDD + PHONE NUMBER'),
+                    ->class('route_value form-control')
+                    // ->mask([
+                    //     'numericInput' => true
+                    // ])
+                    //->type('number')
+                    //->placeholder('Ex: 55 11 9999 9999')
+                    //->help('Only numbers. DDI + DDD + PHONE NUMBER'),
             ]))
             ->title('Create your WhatsHook')
             ->applyButton('Add WebHook'),
@@ -143,10 +148,15 @@ class WebhookScreen extends Screen
             'webhook.route_value' => 'required|max:255',
         ]);
 
+        $route_value = $request->input('webhook.route_value');
+        if($request->input('webhook.route_type') == 'WhatsApp'){
+            $route_value = $request->input('webhook.phone_number');
+        }
+
         $webhook = new Webhook();
         $webhook->name = $request->input('webhook.name');
         $webhook->route_type = $request->input('webhook.route_type');
-        $webhook->route_value = $request->input('webhook.route_value');
+        $webhook->route_value = $route_value;
         $webhook->alias = $this->generateAlias();
         $webhook->save();
     }
