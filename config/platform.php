@@ -134,6 +134,7 @@ return [
             'https://code.jquery.com/jquery-3.6.3.min.js',
             'https://cdn.jsdelivr.net/npm/jquery-mask-plugin@1.14.16/dist/jquery.mask.min.js',
             'https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js',
+            'https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js',
             '/js/custom.js',
         ],
     ],

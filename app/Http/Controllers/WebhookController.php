@@ -23,6 +23,7 @@ class WebhookController extends Controller
     public function send(Request $request, $alias)
     {
         $httpClient = new HttpClient();
+        $redirect_return_url = null;
 
         //$payload = json_decode($request->getContent());
         $payload = $request->getContent();
@@ -42,9 +43,14 @@ class WebhookController extends Controller
         $httpBaseUrl = env('APP_URL_WHATSAPP');
 
         try {
-            // if($this->isJson($payload)){
-            //     $payload = json_encode($payload, true);
-            // }
+            if(!$this->isJson($payload)){
+                parse_str(urldecode($payload), $payload_clean);
+                $payload = json_encode($payload_clean, JSON_PRETTY_PRINT);
+
+                if(isset($payload_clean['_redirect'])){
+                    $redirect_return_url = $payload_clean['_redirect'];
+                }
+            }
 
             $data = [
                 'url' => $webhook->alias,
@@ -72,6 +78,10 @@ class WebhookController extends Controller
             return response()->json([
                 'status' => 400
             ], 400);
+        }
+
+        if($redirect_return_url){
+            return redirect($redirect_return_url);
         }
 
         return response()->json([

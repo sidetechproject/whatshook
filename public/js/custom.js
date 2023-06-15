@@ -52,6 +52,11 @@ class App {
 			console.log(phone_number.replace(/\D/g, ''));
 		} );
 	}
+
+	copyText() {
+		// 		var clipboard = new ClipboardJS('');
+		// console.log(clipboard);
+	}
 }
 
 const app = new App();

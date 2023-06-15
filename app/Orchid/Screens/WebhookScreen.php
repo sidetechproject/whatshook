@@ -89,7 +89,7 @@ class WebhookScreen extends Screen
                     return !$webhook->status ? 'Pending Validation, click on the <br> link sent to WhatsApp (' . $webhook->route_value . ') .' : 'Active';
                 }),
 
-                TD::make('alias', __('URL'))->render(function ($webhook) {
+                TD::make('alias', __('WebHook URL'))->render(function ($webhook) {
                     return env('APP_URL') . '/' . $webhook->alias;
                 }),
 
