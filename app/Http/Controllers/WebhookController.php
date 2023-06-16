@@ -25,7 +25,6 @@ class WebhookController extends Controller
         $httpClient = new HttpClient();
         $redirect_return_url = null;
 
-        //$payload = json_decode($request->getContent());
         $payload = $request->getContent();
         if(!$payload){
             $payload = 'Empty Payload';
@@ -84,15 +83,19 @@ class WebhookController extends Controller
             return redirect($redirect_return_url);
         }
 
+        // if(!$request->ajax()){
+        //     return redirect()->back();
+        // }
+
         return response()->json([
             'status' => 200
         ], 200);
     }
 
     public function channelVerify($uuid)
-    {   
+    {
         $channelIsVerified = $this->verify($uuid);
-        
+
         return view('webhook-verification', ['channelIsVerified' => $channelIsVerified]);
     }
 }

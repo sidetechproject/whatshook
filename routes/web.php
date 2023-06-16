@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebhookController;
-
+use Illuminate\Support\Facades\File;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,7 +15,8 @@ use App\Http\Controllers\WebhookController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return File::get(public_path() . '/website.html');
+    //return view('welcome');
 });
 
 //Route::get('/{id}', 'WebhookController@index')->name('webhook');
