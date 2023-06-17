@@ -2,20 +2,21 @@
 
 namespace App\Orchid\Screens;
 
-use Orchid\Screen\Actions\ModalToggle;
+use Auth;
+use App\Models\User;
+use Orchid\Screen\TD;
+use App\Models\Webhook;
 use Orchid\Screen\Screen;
 use Orchid\Screen\Fields\Input;
 use Orchid\Support\Facades\Layout;
-use App\Models\Webhook;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Button;
 use App\Traits\WebhookTrait;
 use Orchid\Screen\Actions\Link;
 use Orchid\Support\Facades\Alert;
+use Orchid\Screen\Fields\TextArea;
 use Orchid\Support\Facades\Toast;
-use Auth;
+use Orchid\Screen\Actions\ModalToggle;
 
 class WebhookScreen extends Screen
 {
@@ -56,7 +57,10 @@ class WebhookScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        $canAddWebHooks = Auth::user()->subscribed() || $this->webhooks->count() < 1;
+        $canAddWebHooks = false;
+        if( $this->webhooks && (count($this->webhooks) < 1 || Auth::user()->subscribed()) ){
+            $canAddWebHooks = true;
+        }
 
         return [
             ModalToggle::make('Add WebHook')
@@ -84,7 +88,7 @@ class WebhookScreen extends Screen
         return [
             Layout::table('webhooks', [
                 TD::make('name', __('Name')),
-                
+
                 TD::make('status', __('Status'))->render(function ($webhook) {
                     return !$webhook->status ? 'Pending Validation, click on the <br> link sent to WhatsApp (' . $webhook->route_value . ') .' : 'Active';
                 }),
@@ -97,9 +101,18 @@ class WebhookScreen extends Screen
 
                 TD::make('route_value', __('Value')),
 
-                TD::make('', __('WhatsApp Messages'))->render(function ($webhook) {
+                TD::make('', __('Notifications'))->render(function ($webhook) {
                     return !Auth::user()->subscribed() ? '100 / month' : 'Unlimited';
                 }),
+
+                TD::make('custom_message', '')
+                ->render(fn (Webhook $webhook) => ModalToggle::make(__('Custom Message'))
+                    ->modal('asyncEditCustomMessageModal')
+                    ->modalTitle('Custom Message from ' . $webhook->name)
+                    ->method('update')
+                    ->asyncParameters([
+                        'webhook' => $webhook->id,
+                ])),
 
                 TD::make('')
                 ->alignRight()
@@ -109,6 +122,17 @@ class WebhookScreen extends Screen
                         ->method('delete', ['webhook' => $webhook->id]);
                 }),
             ]),
+
+            Layout::modal('asyncEditCustomMessageModal', Layout::rows([
+                Textarea::make('webhook.custom_message')
+                    ->title('Custom Message')
+                    ->rows(5)
+                    ->placeholder('Hello, new identified payment from {customer.name} in the amount of {amount}')
+                    ->help("Here you can configure a custom message to replace the received default payload. Here's how to set the variables: {json_key}"),
+            ]))
+            ->title('Update your WhatsHook')
+            ->applyButton('Save')
+            ->async('asyncGetWebhook'),
 
             Layout::modal('webhookModal', Layout::rows([
                 Input::make('webhook.name')
@@ -139,6 +163,16 @@ class WebhookScreen extends Screen
     }
 
     /**
+     * @return array
+     */
+    public function asyncGetWebhook(Webhook $webhook): iterable
+    {
+        return [
+            'webhook' => $webhook,
+        ];
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      *
      * @return void
@@ -165,6 +199,8 @@ class WebhookScreen extends Screen
         $webhook->save();
 
         $this->sendWhatsAppLinkVerification($webhook);
+
+        Toast::info(__('Saved successfully.'));
     }
 
     /**
@@ -175,5 +211,23 @@ class WebhookScreen extends Screen
     public function delete(WebHook $webhook)
     {
         $webhook->delete();
+    }
+
+    /**
+     * @param WebHook $webhook
+     *
+     * @return void
+     */
+    public function update(Request $request, WebHook $webhook)
+    {
+        $request->validate([
+            'webhook.custom_message' => 'required',
+        ]);
+
+        $webhook->custom_message = $request->input('webhook.custom_message');
+
+        $webhook->save();
+
+        Toast::info(__('Custom message saved successfully.'));
     }
 }

@@ -32,7 +32,7 @@ class WebhookController extends Controller
 
         $webhook = Webhook::where('alias', '=', trim($alias))->first();
 
-        if(!$webhook || !$webhook->status){
+        if(!$webhook || !$webhook->status) {
             return response()->json([
                 'status' => 400,
                 'message' => 'Not Found or Not Verified'
@@ -49,6 +49,10 @@ class WebhookController extends Controller
                 if(isset($payload_clean['_redirect'])){
                     $redirect_return_url = $payload_clean['_redirect'];
                 }
+            }
+
+            if($webhook->custom_message) {
+                $payload = $this->setCustomMessage($webhook, $payload);
             }
 
             $data = [
