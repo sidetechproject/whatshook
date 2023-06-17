@@ -17,6 +17,7 @@ use Orchid\Support\Facades\Alert;
 use Orchid\Screen\Fields\TextArea;
 use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\Select;
 
 class WebhookScreen extends Screen
 {
@@ -136,18 +137,34 @@ class WebhookScreen extends Screen
 
             Layout::modal('webhookModal', Layout::rows([
                 Input::make('webhook.name')
+                    ->required()
                     ->title('Name')
                     ->placeholder('Enter webhook name'),
                     // ->help('The name of the webhook to be created.'),
 
-                Input::make('webhook.route_type')
-                    ->type('hidden')
-                    ->value('WhatsApp'),
+                // Input::make('webhook.route_type')
+                //     ->type('hidden')
+                //     ->value('WhatsApp'),
+
+                Select::make('webhook.route_type')
+                    ->required()
+                    ->options([
+                        'whatsapp' => 'WhatsApp',
+                        // 'telegram' => 'Telegram',
+                        // 'slack' => 'Slack',
+                        // 'email' => 'Email',
+                    ])
+                    ->title(__('Provider'))
+                    //->disabled()
+                    ->placeholder(__('Provider'))
+                    ->class('disabled')
+                    ->help('Soon new integrations: Telegram, Slack, Email and SMS.'),
 
                 Input::make('webhook.phone_number')
                     ->type('hidden'),
 
                 Input::make('webhook.route_value')
+                    ->required()
                     ->title('WhatsApp Number')
                     ->class('route_value form-control')
                     // ->mask([
