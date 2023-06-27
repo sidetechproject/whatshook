@@ -100,6 +100,10 @@ class WebhookScreen extends Screen
 
                 TD::make('route_type', __('Channel')),
 
+                TD::make('route_type', __('Channel'))->render(function ($webhook) {
+                    return Webhook::ROUTE_TYPE_WHATSAPP == $webhook->route_type ? 'WhatsApp' : 'Other';
+                }),
+
                 TD::make('route_value', __('Value')),
 
                 TD::make('', __('Notifications'))->render(function ($webhook) {
@@ -142,14 +146,10 @@ class WebhookScreen extends Screen
                     ->placeholder('Enter webhook name'),
                     // ->help('The name of the webhook to be created.'),
 
-                // Input::make('webhook.route_type')
-                //     ->type('hidden')
-                //     ->value('WhatsApp'),
-
                 Select::make('webhook.route_type')
                     ->required()
                     ->options([
-                        'whatsapp' => 'WhatsApp',
+                        Webhook::ROUTE_TYPE_WHATSAPP => 'WhatsApp',
                         // 'telegram' => 'Telegram',
                         // 'slack' => 'Slack',
                         // 'email' => 'Email',
@@ -204,7 +204,7 @@ class WebhookScreen extends Screen
         ]);
 
         $route_value = $request->input('webhook.route_value');
-        if($request->input('webhook.route_type') == 'WhatsApp'){
+        if($request->input('webhook.route_type') == Webhook::ROUTE_TYPE_WHATSAPP){
             $route_value = $request->input('webhook.phone_number');
         }
 

@@ -12,6 +12,8 @@ class Webhook extends Model
 {
     use HasFactory, AsSource;
 
+    const ROUTE_TYPE_WHATSAPP = 0;
+
     protected static function boot()
     {
         parent::boot();
